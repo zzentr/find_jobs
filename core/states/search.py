@@ -19,14 +19,13 @@ async def send_vacancies(message: Message, state: FSMContext):
     response = await search_vacancies(message.text)
     vacancies = response['items']
     message_vacancies = await to_thread(create_dict_with_vacancies, vacancies, message.from_user.id)
-    print(last_vacancy)
     await message.answer(message_vacancies, parse_mode='html', reply_markup=more_vacancies, disable_web_page_preview=True)
     await state.clear()
 
 def create_message_with_vacancies(tg_id: int) -> str:
     global last_vacancy
-    last_vacancy[tg_id] = 1
-    print(last_vacancy)
+    if last_vacancy.get(tg_id) is None:
+        last_vacancy[tg_id] = 1 
     message = '👁 Чтобы посмотреть подробную информацию о вакансии, напишите мне её номер!\n\n'
     index = 0
     for vacancy_key in all_vacancies[tg_id]:
