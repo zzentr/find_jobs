@@ -1,6 +1,4 @@
 from main import all_vacancies, all_specialties, last_vacancy
-from re import sub
-
 
 def create_message_with_vacancies(tg_id: int) -> str:
     global last_vacancy
@@ -82,14 +80,12 @@ def create_list_all_specialties(response: dict) -> None:
             if spec == 'другое':
                 break
 
-            spec = sub(r'', '', spec)
+            spec = spec.split('(')[0]
 
             if ',' in spec:
                 spec = spec.split(', ')
                 for spec_clear in spec:
-                    print(spec_clear)
                     all_specialties.append(spec_clear)
                 continue
 
             all_specialties.append(spec)
-            print(spec)

@@ -15,4 +15,4 @@ async def start(message: Message):
 @router.message(Command('search'))
 async def search_vacancies(message: Message, state: FSMContext):
     await state.set_state(Search.speciality)
-    await message.answer('Напишите специальность по которой нужно найти вакансии. Без цифр и символов, только буквы')
+    await message.answer('Напишите специальность по которой нужно найти вакансии.')
