@@ -1,4 +1,4 @@
-from main import all_vacancies, all_specialties, last_vacancy
+from main import all_vacancies, all_specialties, last_vacancy, CURRENCIES
 
 def create_message_with_vacancies(tg_id: int) -> str:
     global last_vacancy
@@ -31,7 +31,6 @@ def create_message_with_vacancies(tg_id: int) -> str:
     return message
 
 def create_dict_with_vacancies(vacancies: dict, tg_id: int) -> str:
-    currencies = {'RUB': 'руб.', 'RUR': 'руб.', 'KZT': 'тенге', 'EUR': 'евро', 'USD': '$'}
     all_vacancies[tg_id] = {}
 
     for i, vacancy in enumerate(vacancies):
@@ -55,7 +54,7 @@ def create_dict_with_vacancies(vacancies: dict, tg_id: int) -> str:
                 else:
                     salary = f'до {vacancy['salary']['to']} '
 
-            salary += currencies[vacancy['salary']['currency']]
+            salary += CURRENCIES[vacancy['salary']['currency']]
 
         if vacancy['snippet']['responsibility']:
             snippet += (f'Обязанности: {vacancy['snippet']['responsibility'].replace('<highlighttext>', '').replace('</highlighttext>', '')}\n\n')

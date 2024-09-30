@@ -4,15 +4,17 @@ from dotenv import load_dotenv
 import os
 load_dotenv()
 
-from core.handlers import commands, reply_text
-from core.states import search
-from core.requestsAPI import get_all_specialties
-
 bot = Bot(os.getenv('TOKEN'))
 dp = Dispatcher()
+
+CURRENCIES = {'RUB': 'руб.', 'RUR': 'руб.', 'KZT': 'тенге', 'EUR': 'евро', 'USD': '$', 'BYR': 'бел. руб.'}
 all_vacancies = {}
 last_vacancy = {}
 all_specialties = []
+
+from core.handlers import commands, reply_text
+from core.states import search
+from core.requestsAPI import get_all_specialties
 
 async def main():
     dp.include_routers(commands.router, reply_text.router, 

@@ -1,4 +1,5 @@
 from asyncio import to_thread
+from re import fullmatch
 
 from main import all_specialties
 from core.states.imports import *
@@ -17,7 +18,9 @@ class Search(StatesGroup):
 @router.message(Search.speciality)
 async def send_vacancies(message: Message, state: FSMContext):
     speciality = message.text
-    
+    if not fullmatch(r'[a-zA-Z,а-я,А-Я]*', speciality):
+        await message.answer('Введите значение состоящие только из букв!')
+        return
     if speciality not in all_specialties:
         await message.answer('Введите корректную специальность')
         return
