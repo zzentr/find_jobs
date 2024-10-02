@@ -2,7 +2,7 @@ from aiogram import F, Router
 from aiogram.types import Message
 from asyncio import to_thread
 from core.synchronous_functions import create_message_with_vacancies
-from core.keyboards.reply import more_vacancies
+from core.keyboards import more_vacancies
 from main import all_vacancies
 
 
