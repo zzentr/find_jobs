@@ -1,4 +1,4 @@
-from main import all_vacancies, all_specialties, last_vacancy, CURRENCIES
+from main import all_vacancies, all_specialties, all_areas, last_vacancy, CURRENCIES
 
 def create_message_with_vacancies(tg_id: int) -> str:
     global last_vacancy
@@ -88,3 +88,20 @@ def create_list_all_specialties(response: dict) -> None:
                 continue
 
             all_specialties.append(spec)
+
+def create_dict_all_areas(response: list) -> None:
+    global all_areas
+
+    for country in response:
+        all_areas[country['id']] = country['name'].lower()
+        for region in country['areas']:
+            all_areas[region['id']] = region['name'].lower()
+            for city in region['areas']:
+                all_areas[city['id']] = city['name'].lower()           
+
+def check_correct_area(area):
+
+    for key, value in all_areas.items():
+        if area == value:
+            return int(key) 
+    return False

@@ -1,5 +1,5 @@
-from core.states.imports import *
-from core.states.search import Vacancies
+from core.handlers.states.imports import *
+from core.handlers.states.search import Vacancies
 from core.keyboards import specialties
 
 router = Router()
