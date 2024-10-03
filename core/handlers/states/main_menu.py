@@ -17,7 +17,7 @@ async def menu(message: Message, state: FSMContext):
     if text == 'Искать вакансии':
         await state.set_state(Vacancies.speciality)
         await message.answer('Выберите специальность по которой нужно найти вакансии или напишите сами',
-                          reply_markup=await specialties(message.from_user.id))
+                          reply_markup=await specialties(message.from_user.id, True))
         
     elif text == 'что-то':
         await message.answer('плохое')

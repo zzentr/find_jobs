@@ -13,6 +13,11 @@ async def get_vacancies(speciality: str, area: int, salary: int) -> dict:
         async with session.get('https://api.hh.ru/vacancies?', params=params) as response:
             return await response.json()
         
+async def get_one_vacancy(id_vacancy: str) -> dict:
+    async with aiohttp.ClientSession() as session:
+        async with session.get(f'https://api.hh.ru/vacancies/{id_vacancy}') as response:
+            return await response.json()
+        
 async def get_salary_for_speciality(speciality: str) -> dict:
     async with aiohttp.ClientSession() as session:
         params = {

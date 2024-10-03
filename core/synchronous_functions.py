@@ -1,7 +1,8 @@
-from main import all_vacancies, all_specialties, all_areas, last_vacancy, CURRENCIES
+from bs4 import BeautifulSoup
+from main import all_vacancies, id_posted_vacancies, all_specialties, all_areas, last_vacancy, CURRENCIES
 
 def create_message_with_vacancies(tg_id: int) -> str:
-    global last_vacancy
+    global last_vacancy, id_posted_vacancies
     if last_vacancy.get(tg_id) is None:
         last_vacancy[tg_id] = 1 
     message = '👁 Чтобы посмотреть подробную информацию о вакансии, напишите мне её номер!\n\n'
@@ -11,10 +12,11 @@ def create_message_with_vacancies(tg_id: int) -> str:
             continue
 
         if index == 5:
-            last_vacancy[tg_id] = vacancy_key
+            if vacancy_key != 50:
+                last_vacancy[tg_id] = vacancy_key
             break
-        
         index += 1
+        id_posted_vacancies[vacancy_key] = True
         vacancy = all_vacancies[tg_id][vacancy_key]
         
         name = vacancy['name']
@@ -31,9 +33,12 @@ def create_message_with_vacancies(tg_id: int) -> str:
     return message
 
 def create_dict_with_vacancies(vacancies: dict, tg_id: int) -> str:
+    global all_vacancies, id_posted_vacancies
     all_vacancies[tg_id] = {}
 
     for i, vacancy in enumerate(vacancies):
+
+        id_posted_vacancies[i+1] = False
         
         id = vacancy['id']
         name = vacancy['name']
@@ -67,6 +72,11 @@ def create_dict_with_vacancies(vacancies: dict, tg_id: int) -> str:
         
     return create_message_with_vacancies(tg_id)
 
+def create_message_one_vacancy(response: dict) -> str:
+    description = response['description']
+    soup = BeautifulSoup(description, 'html.parser')
+    return soup.get_text()
+
 def create_list_all_specialties(response: dict) -> None:
     global all_specialties
     categories = response['categories']
@@ -74,10 +84,10 @@ def create_list_all_specialties(response: dict) -> None:
     for category in categories:
         specialties = category['roles']
         for speciality in specialties:
-            spec = speciality['name'].lower()
+            spec = speciality['name']
 
             if spec == 'другое':
-                break
+                return
 
             spec = spec.split('(')[0]
 
