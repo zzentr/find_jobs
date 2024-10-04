@@ -12,7 +12,6 @@ POPULAR_CITIES = ['Москва', 'Санкт-Петербург', 'Владив
                 'Ярославль', 'Ростов-на-Дону', 'Нижний Новгород']
 CURRENCIES = {'RUB': 'руб.', 'RUR': 'руб.', 'KZT': 'тенге', 'EUR': 'евро', 'USD': '$', 'BYR': 'бел. руб.'}
 all_vacancies = {}
-id_posted_vacancies = {}
 last_vacancy = {}
 all_specialties = []
 all_areas = {}

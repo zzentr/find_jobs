@@ -1,11 +1,11 @@
 from asyncio import to_thread
 from re import fullmatch, findall
 
-from main import all_specialties, all_vacancies, id_posted_vacancies
+from main import all_specialties
 from core.handlers.states.imports import *
-from core.requestsAPI import get_vacancies, get_one_vacancy
+from core.requestsAPI import get_vacancies
 from core.keyboards import more_vacancies, specialties, salaries, areas
-from core.synchronous_functions import create_dict_with_vacancies, create_message_one_vacancy, check_correct_area
+from core.synchronous_functions import create_dict_with_vacancies, check_correct_area
 
 router = Router()
 
@@ -85,18 +85,4 @@ async def choose_area(message: Message, state: FSMContext):
 
 @router.message(Vacancies.show_vacancies)
 async def send_more_vacancies(message: Message, state: FSMContext):
-    """Выводим подробную информацию про одну вакансию"""
-    number_vacancy = message.text
-    tg_id = message.from_user.id
-
-    if not fullmatch(r'\d+', number_vacancy) or not id_posted_vacancies.get(int(number_vacancy)):
-        print(fullmatch(r'\d+', number_vacancy))
-        print(id_posted_vacancies.get(number_vacancy))
-        await message.answer('Напишите мне номер вакансии или выберите действие на клавиатуре, например, уточнить фильтры')
-        return
-    
-    id_vacancy = all_vacancies[tg_id][int(number_vacancy)]['id']
-    response = await get_one_vacancy(id_vacancy)
-    message_one_vacancy = await to_thread(create_message_one_vacancy, response)
-
-    await message.answer(message_one_vacancy, parse_mode='html')
+    pass
