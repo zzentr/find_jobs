@@ -116,3 +116,17 @@ def check_correct_area(area):
         if area == value:
             return int(key) 
     return False
+
+def create_message_with_selected_options(params: dict) -> str:
+    dict_options = {'speciality': 'Специальность', 'salary': 'Зарплата', 'area': 'Регион',
+                    'experience': 'Опыт работы', 'employment': 'Тип занятости', 'schedule': 'График работы'}
+    mess = 'Ваши ранее указанные параметры для поиска:\n\n'
+
+    for key, param in params.items():
+        if param is not None:
+            if type(param) == list:
+                param = param[1]
+            elif type(param) == int:
+                param = f'{param} руб.'
+            mess += f'<b>{dict_options[key]}:</b> {param}\n'
+    return mess

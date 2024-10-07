@@ -1,15 +1,20 @@
 import aiohttp
 
-async def get_vacancies(speciality: str, area: int, salary: int) -> dict:
+async def get_vacancies(speciality: str, area: int | None, salary: int | None,
+                         experience: str = None, employment: str = None, schedule: str = None, update_data = None) -> dict:
     async with aiohttp.ClientSession() as session:
         params = {
             'host': 'hh.ru',
             'text': speciality,
-            'area': area,
-            'salary': salary,
             'per_page': 50,
             'locale': 'RU'
         }
+        if area: params['area'] = area[0]
+        if salary: params['salary'] = salary
+        if experience: params['experience'] = experience[0]
+        if employment: params['employment'] = employment[0]
+        if schedule: params['schedule'] = schedule[0]
+
         async with session.get('https://api.hh.ru/vacancies?', params=params) as response:
             return await response.json()
         

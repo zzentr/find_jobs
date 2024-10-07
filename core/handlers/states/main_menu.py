@@ -16,6 +16,7 @@ async def menu(message: Message, state: FSMContext):
 
     if text == 'Искать вакансии':
         await state.set_state(Vacancies.speciality)
+        await state.update_data(speciality=None, salary=None, area=None, experience=None, employment=None, schedule=None)
         await message.answer('Выберите специальность по которой нужно найти вакансии или напишите сами',
                           reply_markup=await specialties(message.from_user.id, True))
         

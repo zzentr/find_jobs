@@ -10,8 +10,25 @@ last_city_show = {}
 main_menu = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Искать вакансии')],
                                         [KeyboardButton(text='что-то')]],
                                 resize_keyboard=True)
-more_vacancies = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Ещё ⇒')], [KeyboardButton(text='Главное меню')]],
+more_vacancies = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Ещё ⇒')],
+                                               [KeyboardButton(text='Уточнить параметры поиска')],
+                                               [KeyboardButton(text='Главное меню')]],
                                       resize_keyboard=True)
+
+additional_options = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Вернуться к поиску')],
+                                                   [KeyboardButton(text='Главное меню')]])
+
+experiences = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Нет опыта'), KeyboardButton(text='От 1 года до 3 лет')],
+                                            [KeyboardButton(text='От 3 до 6 лет'), KeyboardButton(text='Более 6 лет')],
+                                            [KeyboardButton(text='Главное меню')]])
+
+employments = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Полная занятость'), KeyboardButton(text='Частичная занятость')],
+                                            [KeyboardButton(text='Волонтерство'), KeyboardButton(text='Стажировка')],
+                                            [KeyboardButton(text='Главное меню')]])
+
+schedules = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Полный день'), KeyboardButton(text='Сменный график')],
+                                            [KeyboardButton(text='Гибкий график'), KeyboardButton(text='Удаленная работа')],
+                                            [KeyboardButton(text='Главное меню')]])
 
 async def specialties(tg_id, keyboard_reset=False):
     global last_speciality_show
@@ -44,7 +61,7 @@ async def specialties(tg_id, keyboard_reset=False):
 
     return keyboboard.as_markup(resize_keyboard=True)
 
-async def salaries(speciality: str):
+async def salaries(speciality: str, update_data=False):
     keyboard = ReplyKeyboardBuilder()
     response = await get_salary_for_speciality(speciality)
     salaries = response['clusters'][1]
@@ -59,11 +76,14 @@ async def salaries(speciality: str):
         keyboard.add(KeyboardButton(text=salary))
     
     keyboard.adjust(2)
-    keyboard.row(KeyboardButton(text='⇐ Специальность'), KeyboardButton(text='Пропустить'), KeyboardButton(text='Главное меню'))
+    if not update_data:
+        keyboard.row(KeyboardButton(text='⇐ Специальность'))
+    keyboard.row(KeyboardButton(text='Пропустить'))
+    keyboard.row(KeyboardButton(text='Главное меню'))
 
     return keyboard.as_markup(resize_keyboard=True)
 
-async def areas(tg_id, keyboard_reset=False):
+async def areas(tg_id, keyboard_reset=False, update_data=False):
     global last_city_show
     keyboboard = ReplyKeyboardBuilder()
     if not last_city_show.get(tg_id):
@@ -84,7 +104,10 @@ async def areas(tg_id, keyboard_reset=False):
         keyboboard.row(KeyboardButton(text='⇐ Назад'))
     else:
         keyboboard.row(KeyboardButton(text='Ещё ⇒'))
-    keyboboard.row(KeyboardButton(text='⇐ Зарплата'))
+        
+    if not update_data:
+        keyboboard.row(KeyboardButton(text='⇐ Зарплата'))
+    keyboboard.row(KeyboardButton(text='Пропустить'))
     keyboboard.row(KeyboardButton(text='Главное меню'))
 
     if last_city_show[tg_id] != 12:
