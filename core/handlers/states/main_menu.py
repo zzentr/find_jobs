@@ -23,5 +23,5 @@ async def menu(message: Message, state: FSMContext):
     elif text == 'что-то':
         await message.answer('плохое')
 
-    else: await message.answer('Выберите действие на клавиатуре!')
+    else: await message.answer('Пожалуйста, выберите действие на клавиатуре!')
     

@@ -105,8 +105,10 @@ async def choose_area(message: Message, state: FSMContext):
         await send_message_with_choose_options(message, state)
         return
     
+    response = await send_vacancies(message, state)
+    if response == '404':
+        return
     await state.set_state(Vacancies.show_vacancies)
-    await send_vacancies(message, state)
 
 @router.message(Vacancies.experience)
 async def choose_experience(message: Message, state: FSMContext):
@@ -155,8 +157,10 @@ async def choose_parameter(message: Message, state: FSMContext):
     num = message.text
 
     if num == 'Вернуться к поиску':
+        response = await send_vacancies(message, state)
+        if response == '404':
+            return
         await state.set_state(Vacancies.show_vacancies)
-        await send_vacancies(message, state)
         return
 
     if not fullmatch(r'[1-6]', num):
@@ -196,6 +200,14 @@ async def choose_parameter(message: Message, state: FSMContext):
 async def send_vacancies(message: Message, state: FSMContext):
     data = await state.get_data()
     response = await get_vacancies(**data)
+    if not response or response == '404':
+        await message.answer_sticker('CAACAgIAAxkBAAIH0mcGI4y6nZZmZy53-nxJQalBPG5HAALyFQACqQ6ISINhHjYSC7UtNgQ')
+        await message.answer('Извините, но возникла проблема с получением вакансий! Попробуйте изменить фильтры')
+        return '404'
+
+    if len(response['items']) == 0:
+        await message.answer('Извините, но я не смог найти вакансии с указанными фильтрами!')
+        return '404'
     vacancies = response['items']
 
     message_vacancies = await to_thread(create_dict_with_vacancies, vacancies, message.from_user.id)

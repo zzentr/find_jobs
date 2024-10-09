@@ -15,8 +15,15 @@ async def get_vacancies(speciality: str, area: int | None, salary: int | None,
         if employment: params['employment'] = employment[0]
         if schedule: params['schedule'] = schedule[0]
 
-        async with session.get('https://api.hh.ru/vacancies?', params=params) as response:
-            return await response.json()
+        try:
+            async with session.get('https://api.hh.ru/vacancies?', params=params) as response:
+                if response.ok:
+                    return await response.json()
+                else:
+                    return '404'
+        except Exception as er:
+            print(f'Error: {er}')
+            return False
         
 async def get_salary_for_speciality(speciality: str) -> dict:
     async with aiohttp.ClientSession() as session:
